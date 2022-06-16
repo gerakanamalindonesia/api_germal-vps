@@ -1,8 +1,7 @@
 const express = require("express");
+const { getAllCategory } = require("../controllers/category.controller");
 const router = express.Router();
 
-router.get("/", (_, res) => {
-  return res.send("Hello category syar'i with me");
-});
+router.get("/", getAllCategory);
 
 module.exports = router;
