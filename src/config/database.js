@@ -1,9 +1,10 @@
-const mysql = require("mysql2");
-const pool = mysql.createPool({
-  connectionLimit: 150,
+const { Pool } = require("pg");
+
+const pool = new Pool({
   host: "localhost",
   user: "germal",
   password: "gabug123",
+  port: 5432,
   database: "db_olshop",
 });
 
