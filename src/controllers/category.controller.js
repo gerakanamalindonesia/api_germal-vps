@@ -57,7 +57,7 @@ exports.addNewCategory = async (req, res) => {
     const response = await client.query(newCatQry, newCatPrm);
     return res.status(400).send({
       message: "Success melakukan insert category",
-      data: response,
+      data: response.rows,
     });
   } catch (error) {
     console.log(error);
