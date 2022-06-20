@@ -15,6 +15,7 @@ const successDataHandle = (type, res) => {
   if (type === "save") {
     return res.send({
       message: "Data berhasil disimpan",
+      data: res,
     });
   } else if (type === "update") {
     return res.send({
