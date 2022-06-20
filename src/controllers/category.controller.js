@@ -55,10 +55,46 @@ exports.addNewCategory = async (req, res) => {
       "INSERT INTO tb_category(id, category, isactive, image) VALUES($1,$2,$3,$4) RETURNING id, category";
     const newCatPrm = [uuidv4(), category, isActive, resImage.url];
     const response = await client.query(newCatQry, newCatPrm);
-    return res.status(400).send({
+    return res.status(201).send({
       message: "Success melakukan insert category",
       data: response.rows,
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      message: "Terjadi kesalahan saat melakukan insert category",
+      error: error,
+    });
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Get active/inactive category
+ * Mengambil data actegory yang berstatus active / inactive
+ * @method : get
+ * @param : isactive (active / inactive)
+ * @response : data category sesuai dengan parameter isactive
+ */
+exports.getCategoryWithStatus = async (req, res) => {
+  const isactive = req.params;
+
+  const client = pool.connect();
+
+  try {
+    const catStatusQey =
+      "SELECT id, category, isactive, image FROM tb_category WHERE isactive = $1";
+    const response = await client.query(catStatusQey, isactive);
+
+    if (response.length === 0) {
+      dataNullHandle(res);
+    } else {
+      return res.status(200).send({
+        message: "Success get category by isactive",
+        data: response,
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(400).send({
