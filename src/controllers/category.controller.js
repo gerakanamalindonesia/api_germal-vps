@@ -83,9 +83,8 @@ exports.getCategoryWithStatus = async (req, res) => {
   const client = pool.connect();
 
   try {
-    const catStatusQey =
-      "SELECT id, category, isactive, image FROM tb_category WHERE isactive = $1";
-    const response = await client.query(catStatusQey, isactive);
+    const catStatusQey = `SELECT id, category, isactive, image FROM "tb_category" WHERE "isactive" = $1`;
+    const response = await client.query(catStatusQey, [isactive]);
 
     if (response.length === 0) {
       dataNullHandle(res);
