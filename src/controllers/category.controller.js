@@ -55,10 +55,16 @@ exports.addNewCategory = async (req, res) => {
       "INSERT INTO tb_category(id, category, isactive, image) VALUES($1,$2,$3,$4) RETURNING id, category";
     const newCatPrm = [uuidv4(), category, isActive, resImage];
     const response = await client.query(newCatQry, newCatPrm);
-    successDataHandle("save", response);
+    return res.status(400).send({
+      message: "Success melakukan insert category",
+      data: response,
+    });
   } catch (error) {
     console.log(error);
-    errorHanlderQuery(400, "get all categories", error, res);
+    return res.status(400).send({
+      message: "Terjadi kesalahan saat melakukan insert category",
+      error: error,
+    });
   } finally {
     client.release();
   }
