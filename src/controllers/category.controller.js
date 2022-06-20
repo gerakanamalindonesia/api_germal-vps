@@ -52,13 +52,13 @@ exports.addNewCategory = async (req, res) => {
     });
 
     const newCatQry =
-      "INSERT INTO tb_category(id, category, isactive, image) VALUES(?,?,?,?) RETURNING id, category, isactive, image";
+      "INSERT INTO tb_category(id, category, isactive, image) VALUES($1,$2,$3,$4) RETURNING id, category";
     const newCatPrm = [uuidv4(), category, isActive, resImage];
     const response = await client.query(newCatQry, newCatPrm);
     successDataHandle("save", response);
   } catch (error) {
     console.log(error);
-    errorHanlderQuery(400, "get all categories", err, res);
+    errorHanlderQuery(400, "get all categories", error, res);
   } finally {
     client.release();
   }
