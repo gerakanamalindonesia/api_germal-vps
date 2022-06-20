@@ -53,7 +53,7 @@ exports.addNewCategory = async (req, res) => {
 
     const newCatQry =
       "INSERT INTO tb_category(id, category, isactive, image) VALUES($1,$2,$3,$4) RETURNING id, category";
-    const newCatPrm = [uuidv4(), category, isActive, resImage];
+    const newCatPrm = [uuidv4(), category, isActive, resImage.url];
     const response = await client.query(newCatQry, newCatPrm);
     return res.status(400).send({
       message: "Success melakukan insert category",
