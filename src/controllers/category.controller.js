@@ -78,8 +78,7 @@ exports.addNewCategory = async (req, res) => {
  * @response : data category sesuai dengan parameter isactive
  */
 exports.getCategoryWithStatus = async (req, res) => {
-  const client = pool.connect();
-  console.log(req.query.isactive);
+  const client = await pool.connect();
 
   try {
     const catStatusQey =
