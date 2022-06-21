@@ -135,3 +135,41 @@ exports.getDetailCategory = async (req, res) => {
     client.release();
   }
 };
+
+/**
+ * Delete category
+ * Menghapus category berdasarkan ID category
+ * @method : Delete
+ * @parameter : ID category
+ */
+exports.deleteCategory = async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    // ambil image categori, kemudian ambil public IDnya (nama filenya saja tanpa extension)
+    const findCatQry = "SELECT image FROM tb_category WHERE id = $1";
+    const resFindCat = await client.query(findCatQry, [req.params.id]);
+
+    let arrImg = resFindCat.rows[0].image.split("/");
+    let lastElImg = arrImg[arrImg.length - 1];
+    let getIdImg = lastElImg.split(".");
+
+    await cloudinary.uploader.destroy("categories/" + getIdImg[0]);
+
+    const delCatQry = "DELETE FROM tb_category WHERE id = $1";
+    const response = await client.query(delCatQry, [req.params.id]);
+
+    return res.send({
+      message: "Data berhasil dihapus",
+      data: response,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      message: "Terjadi kesalahan saat melakukan query delete category",
+      error: error,
+    });
+  } finally {
+    client.release();
+  }
+};
