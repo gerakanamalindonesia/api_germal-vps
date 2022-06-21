@@ -78,13 +78,11 @@ exports.addNewCategory = async (req, res) => {
  * @response : data category sesuai dengan parameter isactive
  */
 exports.getCategoryWithStatus = async (req, res) => {
-  const isactive = req.query;
-
   const client = pool.connect();
 
   try {
     const catStatusQey = `SELECT id, category, isactive, image FROM "tb_category" WHERE "isactive" = $1`;
-    const response = await client.query(catStatusQey, [isactive]);
+    const response = await client.query(catStatusQey, [req.query.isactive]);
 
     if (response.length === 0) {
       dataNullHandle(res);
