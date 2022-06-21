@@ -79,10 +79,12 @@ exports.addNewCategory = async (req, res) => {
  */
 exports.getCategoryWithStatus = async (req, res) => {
   const client = pool.connect();
+  console.log(req.query.isactive);
 
   try {
-    const catStatusQey = `SELECT id, category, isactive, image FROM "tb_category" WHERE "isactive" = $1`;
-    const response = await client.query(catStatusQey, [req.query.isactive]);
+    const catStatusQey =
+      "SELECT id, category, isactive, image FROM tb_category WHERE isactive = $1";
+    const response = await client.query(catStatusQey, req.query.isactive);
 
     if (response.length === 0) {
       dataNullHandle(res);
