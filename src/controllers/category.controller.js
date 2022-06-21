@@ -2,11 +2,7 @@ const pool = require("../config/database");
 const cloudinary = require("../util/cloudinary");
 const { v4: uuidv4 } = require("uuid");
 const { errorHanlderQuery } = require("../util/error_response");
-const {
-  dataNullHandle,
-  successLoad,
-  successDataHandle,
-} = require("../util/success_response");
+const { dataNullHandle, successLoad } = require("../util/success_response");
 
 /**
  * Get all category
@@ -96,7 +92,43 @@ exports.getCategoryWithStatus = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).send({
-      message: "Terjadi kesalahan saat melakukan insert category",
+      message: "Terjadi kesalahan saat melakukan get category by isactive",
+      error: error,
+    });
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Get detail category
+ * Mengambil data category berdasarkan ID category
+ * @method : GET
+ * @param : id category
+ * @response : detail category berdasarkan ID category
+ */
+exports.getDetailCategory = async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const detailCatQry =
+      "SELECT id, category, isactive, image FROM tb_category WHERE id = $1";
+    const response = await client.query(detailCatQry, [req.params.id]);
+
+    if (response.length === 0) {
+      return res.status(200).send({
+        message: "Data tidak ada / tidak ditemukan",
+      });
+    } else {
+      return res.status(200).send({
+        message: "Success get category by id",
+        data: response.rows,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      message: "Terjadi kesalahan saat melakukan get detail category",
       error: error,
     });
   } finally {
