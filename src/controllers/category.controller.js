@@ -90,7 +90,7 @@ exports.getCategoryWithStatus = async (req, res) => {
     } else {
       return res.status(200).send({
         message: "Success get category by isactive",
-        data: response,
+        data: response.rows,
       });
     }
   } catch (error) {
