@@ -188,7 +188,7 @@ exports.updateCategory = async (req, res) => {
   const client = await pool.connect();
 
   try {
-    if (!req.file.path) {
+    if (!req.file) {
       // jika tidak ada gambar yang diupload
       const updateCatQry =
         "UPDATE tb_category SET category = $1 isActive = $2 WHERE id = $3";
