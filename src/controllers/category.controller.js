@@ -207,9 +207,14 @@ exports.updateCategory = async (req, res) => {
       // delete file di cloudinary
       deleteFile("categories", resFindCat.rows[0].image);
 
+      // upload file to cloudinary
+      const resImage = await cloudinary.uploader.upload(req.file.path, {
+        folder: "categories",
+      });
+
       const updateCatQry =
         "UPDATE tb_category SET category = $1, isactive = $2, image = $3 WHERE id = $4";
-      const updateCatPrm = [category, isActive, req.file.path, req.params.id];
+      const updateCatPrm = [category, isActive, resImage.url, req.params.id];
       const response = await client.query(updateCatQry, updateCatPrm);
 
       return res.send({
