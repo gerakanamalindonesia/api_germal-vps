@@ -1,3 +1,5 @@
+const cloudinary = require("../util/cloudinary");
+
 async function deleteFile(folder, image) {
   let arrImg = image.split("/");
   let lastElImg = arrImg[arrImg.length - 1];
