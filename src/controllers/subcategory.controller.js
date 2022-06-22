@@ -12,7 +12,7 @@ exports.getAllSubCategories = async (req, res) => {
   try {
     const subCatQry =
       "SELECT tb_subcategory.id, tb_subcategory.subcategory, tb_subcategory.categoryid, tb_category.category FROM tb_subcategory JOIN tb_category ON tb_category.id = tb_subcategory.categoryid ORDER BY tb_category.createdat DESC";
-    const response = client.query(subCatQry);
+    const response = await client.query(subCatQry);
 
     if (response.rows.length === 0) {
       return res.send({
