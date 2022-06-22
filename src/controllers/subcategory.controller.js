@@ -16,7 +16,7 @@ exports.getAllSubCategories = async (req, res) => {
 
     if (response.rows.length === 0) {
       return res.send({
-        message: "Data berhasil diload",
+        message: "Data tidak ada / tidak ditemukan",
       });
     } else {
       return res.send({
