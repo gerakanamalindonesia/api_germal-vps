@@ -13,8 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const categoryRoute = require("./src/routes/category.router");
+const subCategoryRoute = require("./src/routes/subcategory.router");
 
 app.use("/api/categories", categoryRoute);
+app.use("/api/subcategories", subCategoryRoute);
 
 const port = process.env.PORT;
 
