@@ -16,7 +16,7 @@ router.get("/:id", getDetailCategory);
 
 router.post("/", upload.single("image"), addNewCategory);
 
-router.post(
+router.patch(
   "/:id",
   upload.single("image") ? upload.single("image") : "",
   updateCategory
