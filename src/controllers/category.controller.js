@@ -3,6 +3,7 @@ const cloudinary = require("../util/cloudinary");
 const { v4: uuidv4 } = require("uuid");
 const { errorHanlderQuery } = require("../util/error_response");
 const { dataNullHandle, successLoad } = require("../util/success_response");
+const { deleteFile } = require("../util/deleteFile");
 
 /**
  * Get all category
@@ -161,12 +162,65 @@ exports.deleteCategory = async (req, res) => {
 
     return res.send({
       message: "Data berhasil dihapus",
-      data: response,
     });
   } catch (error) {
     console.log(error);
     return res.status(400).send({
       message: "Terjadi kesalahan saat melakukan query delete category",
+      error: error,
+    });
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * Update category
+ * Melakukan perubahan data category
+ * @method : patch
+ * @parameter : ID category
+ * @body : category, isActive
+ * @file : opsioanal, bisa mengupdate gambar maupun tidak
+ */
+exports.updateCategory = async (req, res) => {
+  const { category, isActive } = req.body;
+
+  const client = await pool.connect();
+
+  try {
+    if (!req.file.path) {
+      // jika tidak ada gambar yang diupload
+      const updateCatQry =
+        "UPDATE tb_category SET category = $1 isActive = $2 WHERE id = $3";
+      const updateCatPrm = [category, isActive, req.params.id];
+      const response = await client.query(updateCatQry, updateCatPrm);
+
+      return res.send({
+        message: "Data berhasil diupdate",
+        data: response.rows,
+      });
+    } else {
+      // ambil image data yang akan diubah
+      const findCatQry = "SELECT image FROM tb_category WHERE id = $1";
+      const resFindCat = await client.query(findCatQry, [req.params.id]);
+
+      // delete file di cloudinary
+      deleteFile("categories", resFindCat.rows[0].image);
+
+      const updateCatQry =
+        "UPDATE tb_category SET category = $1 isActive = $2 image = $3 WHERE id = $4";
+      const updateCatPrm = [category, isActive, req.file.path, req.params.id];
+      const response = await client.query(updateCatQry, updateCatPrm);
+
+      return res.send({
+        message: "Data berhasil diupdate",
+        data: response.rows,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      messsage: "Terjadi kesalahan saat melakukan query update category",
       error: error,
     });
   } finally {
