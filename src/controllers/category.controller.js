@@ -191,7 +191,7 @@ exports.updateCategory = async (req, res) => {
     if (!req.file) {
       // jika tidak ada gambar yang diupload
       const updateCatQry =
-        "UPDATE tb_category SET category = $1 isActive = $2 WHERE id = $3";
+        "UPDATE tb_category SET category = $1 isactive = $2 WHERE id = $3";
       const updateCatPrm = [category, isActive, req.params.id];
       const response = await client.query(updateCatQry, updateCatPrm);
 
@@ -208,7 +208,7 @@ exports.updateCategory = async (req, res) => {
       deleteFile("categories", resFindCat.rows[0].image);
 
       const updateCatQry =
-        "UPDATE tb_category SET category = $1 isActive = $2 image = $3 WHERE id = $4";
+        "UPDATE tb_category SET category = $1 isactive = $2 image = $3 WHERE id = $4";
       const updateCatPrm = [category, isActive, req.file.path, req.params.id];
       const response = await client.query(updateCatQry, updateCatPrm);
 
